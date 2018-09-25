@@ -36,7 +36,7 @@ print('DIY WONE',wONE)
 print('DIY WZERO', wZERO)
 
 print('SKLEARN MSE: ',error)
-print('DIY MSE: ', errorstuff(b,a, k, p))
+print('DIY MSE: ', errorstuff(b,a, wONE, wZERO))
 plt.scatter(a, b)
 plt.plot(a, t, c = 'orange')
 plt.scatter(a, dd, c = 'red')
