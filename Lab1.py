@@ -6,9 +6,9 @@ from sklearn.metrics import mean_squared_error
 
 a = range(1,101)
 b = [1.1*np.log(x)+np.sin(x/2) for x in a]
-
 df = pd.DataFrame(b, index = a)
 
+# SK Learn implementation
 model = LinearRegression()
 model2 = model.fit(np.array(df.index).reshape(-1, 1), df.values)
 p = model2.coef_
@@ -23,7 +23,7 @@ def errorstuff(q,t, w1, w0):
     for x in range(len(q)):
         i.append((q[x] - (w1*t[x] + w0))**2)
     return sum(i)/len(q)
-
+# DIY implementation
 wONEtop = sum([a[x]*b[x] - (np.mean([a[x]*b[x] for x in range(len(a))])*len(a)) for x in range(len(a))])
 wONEbottom = sum([a[x]**2 - len(a)*np.mean(a)**2 for x in range(len(a))])
 
