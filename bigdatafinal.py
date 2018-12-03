@@ -4,6 +4,7 @@ import os
 import glob
 import datetime
 import numpy as np
+import sys
 import pickle
 
 def make_dictoftext():
@@ -28,19 +29,24 @@ def make_invertedindex(dictoftext):
         for y in dictoftext[x]:
             all_words.append(y)
     allwords = set(all_words)
+    # for each word, count how many documents it is in and add it to a list
     invertedindexdict = {t: {'inverted index':[str(x) for x in dictoftext.keys() if t in dictoftext[x]]} for t in allwords}
     for i in invertedindexdict:
+        # count number of documents that the word appears in
         invertedindexdict[i]['freq'] = len(invertedindexdict[i]['inverted index'])
     return invertedindexdict
 def make_tfscores(a, listoftext):
     kk = {x:{'hits':a.count(x),'tf':a.count(x)/len(a), 'idf': np.log(totalnumberofdocuments/len([y for y in listoftext if x in dictofalltext[y]])), 'tf-idf': (a.count(x)/len(a)) * (np.log(totalnumberofdocuments/len([y for y in listoftext if x in dictofalltext[y]])))} for x in a}
     return kk
 def queryfunction():
+    #query function that asks for an input query and a number of how many documents to return
+    # outputs the query, number of documents, results in a list, time for execution and then each of the document's
+    # list of words is returned
     try:
         query = input('\nplease input a query\n\n')
         if query == 'exit':
-            return
-        numofdocs = int(input('\nwhat is n?\n\n'))
+            sys.exit()
+        numofdocs = int(input('\nHow many documents?\n\n'))
         timee1 = datetime.datetime.now()
         yyy=[]
         for x in query.split():
@@ -48,6 +54,7 @@ def queryfunction():
                 yyy.append(invertedindexdict[str(x)]['inverted index'])
             except Exception as e:
                 pass
+        #flatten the list of lists of documents to a single, flat list
         queryresults = [item for sublist in yyy for item in sublist]
         if len(queryresults) == 0:
             return
@@ -74,7 +81,10 @@ def queryfunction():
 timee = datetime.datetime.now()
 print(timee)
 path = 'C:/Users/Julien/PycharmProjects/ds8003final/bbcsport/'
-#
+
+# commented out as this is the set-up phase. It builds the 3 dictionaries that are used and saves them as objects
+# in a mongodb database called 'test-database'. Additionally, a local copy of each dictionary is saved as a python pickle
+
 # # DICTIONARY OF ALL ARTICLES AND A LIST OF WORDS FOR EACH ARTICLE
 # dictofalltext = make_dictoftext()
 #
@@ -113,27 +123,16 @@ path = 'C:/Users/Julien/PycharmProjects/ds8003final/bbcsport/'
 client = pymongo.MongoClient('mongodb+srv://Jay:lovesosa@king-qgrir.azure.mongodb.net/test-database')
 db = client['test-database']
 collection = db['bigdatafinal']
+
+# collection.insert_one(alldoctfidfscores)
+# collection.insert_one(invertedindexdict)
+# collection.insert_one(dictofalltext)
+#get an id for each of the collections in the mongodb test-database
 ids = [x['_id'] for x in collection.find({})]
 alldoctfidfscores = collection.find_one({'_id':ObjectId(ids[0])})
 invertedindexdict = collection.find_one({'_id':ObjectId(ids[1])})
 dictofalltext = collection.find_one({'_id':ObjectId(ids[2])})
 
+#infinite loop, type exit to quit
 while True:
     queryfunction()
-
-
-# collection.insert_one(alldoctfidfscores)
-# collection.insert_one(invertedindexdict)
-# collection.insert_one(dictofalltext)
-
-# print(list(collection.find_one()))
-# tt = {}
-# for x in range(len(list(collection.find()))):
-#     tt[x] = list(collection.find())[x]
-#     for y in list(collection.find())[x]:
-#         print(y)
-
-
-
-
-# print(list(collection.find_one()))
