@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
         timee = datetime.datetime.now()
         tt = 1
-        p = [str(x ** 3) for x in range(tt, 1001)]
+        p = [str(x ** 3) for x in range(tt, 1401)]
         print(timee)
 
         b = [dostuff(xx) for xx in p]

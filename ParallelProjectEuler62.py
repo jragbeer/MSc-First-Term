@@ -12,7 +12,6 @@ import dask.array as da
 
 if __name__ == '__main__':
 
-
     def profile(fnc):
         """A decorator that uses cProfile to profile a function"""
 
@@ -30,7 +29,6 @@ if __name__ == '__main__':
 
         return inner
 
-
     client = Client(threads_per_worker=1, n_workers=4)
     client.restart()
     @profile
@@ -38,7 +36,7 @@ if __name__ == '__main__':
         timee = datetime.datetime.now()
         tt = 1
         # p = da.from_array([str(x ** 3) for x in range(tt, 501)], chunks = (500,))
-        p = [str(x ** 3) for x in range(tt, 1001)]
+        p = [str(x ** 3) for x in range(tt, 1401)]
         print(timee)
 
         def w(xx):
@@ -55,7 +53,8 @@ if __name__ == '__main__':
         arrays = [da.from_delayed(dostuff(v), shape = (1,), dtype=str) for v in p]
 
         b = dask.compute(*arrays)
-        print(datetime.datetime.now()-timee)
+        timee2 = datetime.datetime.now()
+        print(timee2-timee)
 
         @dask.delayed
         def rtt(a, rr):
@@ -68,6 +67,6 @@ if __name__ == '__main__':
             op.append(rtt(q,x))
 
         print(set(dask.compute(*op)))
-
-        print(datetime.datetime.now() - timee)
+        timee3 = datetime.datetime.now()
+        print(timee3 - timee2)
     main()

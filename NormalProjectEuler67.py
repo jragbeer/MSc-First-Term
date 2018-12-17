@@ -130,6 +130,13 @@ def main():
 
     print(len(n))
     def all_paths(r, c):
+        """
+        Return a list of lists containing the each path
+        
+        :param r: row value of root node (0)
+        :param c: column value of root node (0)
+        :return: a list a lists. Each inner list is a path through the triangle
+        """
         current = n[r][c]
         if r < len(n) - 1:
             below_paths = all_paths(r+1, c) + all_paths(r+1, c+1)
